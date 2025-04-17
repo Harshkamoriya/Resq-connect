@@ -5,31 +5,48 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
 
-    // ✅ Password is required only if provider is 'credentials'
-    password: { 
-      type: String, 
-      required: function () { return this.provider === "credentials"; } 
+    password: {
+      type: String,
+      required: function () {
+        return this.provider === "credentials";
+      },
     },
 
-    // ✅ Role defaults to "customer"
-    role: { type: String, enum: ["customer", "helper"], default: "customer" },
+    role: {
+      type: String,
+      enum: ["customer", "helper"],
+      default: "customer",
+    },
 
-    // ✅ Phone is required only if provider is 'credentials'
-    phone: { 
-      type: String, 
-      required: function () { return this.provider === "credentials"; } 
+    phone: {
+      type: String,
+      required: function () {
+        return this.provider === "credentials";
+      },
     },
 
     location: {
+      name: { type: String },
       latitude: { type: Number },
       longitude: { type: Number },
     },
 
+    profileImage: { type: String, default: "" },
+
     servicesBooked: [
       {
-        serviceType: { type: String, enum: ["mechanic", "fuel", "tow"], required: true },
+        serviceType: {
+          type: String,
+          enum: ["mechanic", "fuel", "tow"],
+          required: true,
+        },
         helper: { type: mongoose.Schema.Types.ObjectId, ref: "Helper" },
-        status: { type: String, enum: ["pending", "completed", "cancelled"], default: "pending" },
+        bookingId: { type: mongoose.Schema.Types.ObjectId, ref: "Booking" },
+        status: {
+          type: String,
+          enum: ["pending", "completed", "cancelled"],
+          default: "pending",
+        },
         estimatedPrice: { type: Number, required: true },
         finalPrice: { type: Number },
         distance: { type: Number }, // in km
@@ -40,8 +57,21 @@ const userSchema = new mongoose.Schema(
 
     totalMoneySpent: { type: Number, default: 0 },
 
-    // ✅ Track user signup method
-    provider: { type: String, enum: ["credentials", "google"], required: true }, 
+    provider: {
+      type: String,
+      enum: ["credentials", "google"],
+      required: true,
+    },
+
+    ratingsGiven: [
+      {
+        helper: { type: mongoose.Schema.Types.ObjectId, ref: "Helper" },
+        bookingId: { type: mongoose.Schema.Types.ObjectId, ref: "Booking" },
+        rating: { type: Number, min: 1, max: 5 },
+        review: { type: String },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -1,17 +1,19 @@
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/ui/Footer";
 import Hero from "@/components/Hero";
+import AboutPage from "./about/page";
+import ContactPage from "./contact/page";
 
 export default function Home() {
   return (<>
   
- <Navbar/>
    <div className="">
 
     <Hero/>
+    <AboutPage/>
+    <ContactPage/>
+  
+    
    </div>
-   <Footer/>
    </>
    
   );

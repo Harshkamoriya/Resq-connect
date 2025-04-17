@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET(req, { params }) {
   await connectToDB(); // optional, if not connected globally
 
-  const { helperId } = params;
+  const { helperId } = params
   console.log("in the helperInfo fetching function")
 
 

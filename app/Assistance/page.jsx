@@ -13,6 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import ETAComponent from "@/components/eta"
 import { useAppContext } from "../context/Appcontext"
+import axios from "axios"
+import { useSession } from "next-auth/react"
 const services = [
   { id: 1, name: "Mechanic", icon: "🔧" },
   { id: 2, name: "Fuel Delivery", icon: "⛽" },
@@ -44,7 +46,8 @@ export default function SelectForm() {
       service: "",
     },
   })
-
+const {data : session} = useSession();
+console.log(session)
   const { userLocation, setUserLocation}= useAppContext();
   useEffect(() => {
     console.log("Updated helpersData:", helpersData)
@@ -74,10 +77,24 @@ export default function SelectForm() {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
+    const postUserLocation = async () => {
+      try {
+        console.log(userLocation, "userLocation")
+        const res = await axios.put(`/api/set/user-location`, {
+          location: userLocation,
+          email: session.user.email,
+        });
+        console.log(res, "response after updating user location");
+      } catch (error) {
+        console.log("error updating user location", error.message);
+      }
+    };
+  
+    postUserLocation();
     localStorage.setItem("userLocation", JSON.stringify(userLocation));
-
-  },[userLocation])
+  }, [userLocation]);
+  
 
   const getGPSLocation = () => {
     if (!navigator.geolocation) {
